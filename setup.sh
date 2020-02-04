@@ -7,8 +7,26 @@ HOOK_NAMES="pre-commit"
 echo
 PROJECT_DIR="$(git rev-parse --show-toplevel)"
 HOOKS_DIR="$PROJECT_DIR"/.git/hooks
-git checkout -b develop
+git checkout -b v1.x
 echo
+
+function program_doesnt_exist {
+  local return_=1
+  type $1 >/dev/null 2>&1 || { local return_=0; }
+  # return $return_ instead of printing
+  return $return_
+}
+
+# check for yarn installation
+if program_doesnt_exist yarn; then
+  curl -o- -L https://yarnpkg.com/install.sh | bash
+fi
+
+if program_doesnt_exist yarn; then
+  echo "\t\033[41mPlease install yarn globally (sudo npm i yarn -g)\033[0m"
+  exit 1
+fi
+
 echo "## Doing a yarn install"
 yarn install
 # assuming the script is in git-essentials directory, one level into the repo
