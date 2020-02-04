@@ -7,7 +7,7 @@ HOOK_NAMES="pre-commit"
 echo
 PROJECT_DIR="$(git rev-parse --show-toplevel)"
 HOOKS_DIR="$PROJECT_DIR"/.git/hooks
-git checkout -b v1.x
+git checkout -B v1.x
 echo
 
 function program_doesnt_exist {
