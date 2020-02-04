@@ -1,0 +1,9 @@
+{
+  "name": "vue-fastify-registration-app-server",
+  "version": "0.0.1",
+  "description": "Backend part",
+  "main": "index.js",
+  "author": "Sumeet Kumar",
+  "license": "MIT",
+  "private": true
+}

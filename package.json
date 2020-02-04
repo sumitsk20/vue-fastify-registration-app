@@ -1,0 +1,9 @@
+{
+  "name": "vue-fastify-registration-app",
+  "version": "0.0.1",
+  "description": "An example registration app using Vue at frontend and Fastify at backend.",
+  "main": "index.js",
+  "author": "Sumeet Kumar",
+  "license": "MIT",
+  "private": true
+}
