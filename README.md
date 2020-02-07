@@ -1,4 +1,4 @@
-# GHOOM
+# Vue & Fastify App
 
 ## Introduction
 
