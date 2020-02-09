@@ -95,17 +95,17 @@ export default {
     fetchRequestCount() {
       return this.$store
         .dispatch("COUNTREQUEST", {
-          ip: this.$store.state.ip
+          ip: this.$store.state.ip,
+          action: "signup"
         })
         .then(({ data, status }) => {
-          console.log("fetchRequestCount", data);
           this.$store.state.requestCount = data.count;
         });
     },
     register() {
       if (this.valid()) {
         this.fetchRequestCount().then();
-        if (Number(this.$store.state.requestCount) > 3) this.recaptcha(); //invisible recaptcha
+        if (Number(this.$store.state.requestCount) > 3) this.recaptcha().then(); //invisible recaptcha
         this.$store
           .dispatch("REGISTER", {
             userData: {
@@ -115,7 +115,7 @@ export default {
             },
             userRequestData: {
               userip: this.$store.state.ip,
-              captchaToken: this.$store.state.ip
+              captchaToken: this.$store.state.captchaToken
             },
             strategy: "email"
           })

@@ -1,13 +1,22 @@
 'use strict';
 
 const AuthService = require('../services').auth;
-
+const { verifyRecapthca } = require('../helpers/auth/token');
 class AuthController {
   constructor() {
   }
 
   async register(request, reply) {
+    console.log(request.body);
+
     await fastify.validateRequiredFields(request.body, ['userData', 'userRequestData', 'strategy']);
+    const capthcaResult = await verifyRecapthca({
+      secret: fastify.config.CAPTCHA_SECRET_KEY,
+      response: request.body.userRequestData.captchaToken,
+      remoteip: request.body.userRequestData.userip
+    });
+    if (!capthcaResult.success)
+      throw new fastify.errorCodes['CAPTCHA_FAILED']();
     const auth = new AuthService();
     const usrObject = await auth.registerNewUser(request.body, request.user);
 
@@ -23,7 +32,18 @@ class AuthController {
   }
 
   async login(request, reply) {
-    await fastify.validateRequiredFields(request.body, ['credentials', 'strategy']);
+    console.log(request.body);
+
+    await fastify.validateRequiredFields(request.body, ['credentials', 'userRequestData', 'strategy']);
+
+    const capthcaResult = await verifyRecapthca({
+      secret: fastify.config.CAPTCHA_SECRET_KEY,
+      response: request.body.userRequestData.captchaToken,
+      remoteip: request.body.userRequestData.userip
+    });
+    if (!capthcaResult.success)
+      throw new fastify.errorCodes['CAPTCHA_FAILED']();
+
     const auth = new AuthService(request.body.userType);
     const usrObject = await auth.connect(request.body, request.user);
 

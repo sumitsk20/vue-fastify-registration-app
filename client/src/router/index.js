@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Signup from '../components/Signup.vue';
-import Login from '../components/Signup.vue';
-import Profile from '../components/Signup.vue';
+import Login from '../components/Login.vue';
+import Profile from '../components/Profile.vue';
 
 Vue.use(VueRouter);
 
@@ -15,7 +15,7 @@ const routes = [
      * this generates a separate chunk (about.[hash].js) for this route
      * which is lazy-loaded when the route is visited.
      */
-    component: () => Signup
+    component: Signup
   },
   {
     path: '/login',
@@ -25,7 +25,7 @@ const routes = [
      * this generates a separate chunk (about.[hash].js) for this route
      * which is lazy-loaded when the route is visited.
      */
-    component: () => Login
+    component: Login
   },
   {
     path: '/profile',
@@ -35,7 +35,7 @@ const routes = [
      * this generates a separate chunk (about.[hash].js) for this route
      * which is lazy-loaded when the route is visited.
      */
-    component: () => Profile
+    component: Profile
   }
 ];
 

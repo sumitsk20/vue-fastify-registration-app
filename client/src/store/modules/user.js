@@ -28,10 +28,8 @@ export default {
         axios
           .post('auth/login', payload)
           .then(({ data, status }) => {
-            console.log(data);
             if (status === 200)
               resolve(true);
-
           })
           .catch(error => {
             reject(error);

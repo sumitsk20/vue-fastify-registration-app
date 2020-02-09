@@ -13,7 +13,7 @@
               icon="close"
             >The username or the password are incorrect.</v-alert>
             <v-card-text>
-              <v-text-field v-model="username" name="username" label="Username" type="text"></v-text-field>
+              <v-text-field v-model="email" name="email" label="Email" type="text"></v-text-field>
 
               <v-text-field v-model="password" name="password" label="Password" type="password"></v-text-field>
             </v-card-text>
@@ -31,19 +31,54 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "login",
+  created() {
+    axios
+      .get("https://api.ipify.org?format=json")
+      .then(res => {
+        this.$store.state.user.ip = res.data.ip;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  },
   data: () => ({
-    username: "",
+    email: "",
     password: "",
     error: false
   }),
+
   methods: {
+    recaptcha() {
+      return this.$recaptcha("login").then(token => {
+        this.$store.state.user.captchaToken = token;
+        console.log("token", token); // Will print the token
+      });
+    },
+    fetchRequestCount() {
+      return this.$store
+        .dispatch("COUNTREQUEST", {
+          ip: this.$store.state.user.ip,
+          action: "login"
+        })
+        .then(({ data, status }) => {
+          this.$store.state.user.requestCount = data.count;
+        });
+    },
     login() {
+      this.fetchRequestCount().then();
+      if (Number(this.$store.state.user.requestCount) > 3)
+        this.recaptcha().then(); //invisible recaptcha
       this.$store
         .dispatch("LOGIN", {
-          username: this.username,
-          password: this.password
+          credentials: { email: this.email, password: this.password },
+          strategy: "email",
+          userRequestData: {
+            userip: this.$store.state.user.ip,
+            captchaToken: this.$store.state.user.captchaToken
+          }
         })
         .then(success => {
           this.$router.push("/profile");

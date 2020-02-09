@@ -21,6 +21,7 @@ createCustomError('NO_SUCH_FIELD', '%s is not filterable', 400);
 createCustomError('NO_NESTED_REF_FILTER', '%s is not filterable, because it\'s a reference field.', 400);
 createCustomError('INVALID_EMAIL', '%s is not a valid email.', 400);
 createCustomError('EMAIL_ALREADY_EXIST', 'User with similar data already exist.', 409);
+createCustomError('CAPTCHA_FAILED', 'Capthca verification failed.', 409);
 
 
 function createCustomError(code, message, statusCode = 400, error_data = {}, Base = Error) {
