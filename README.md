@@ -62,5 +62,12 @@
 
 After cloning you need to execute `setup.sh` in your **linux/unix** terminal.
 
+If everything went as expected and there is no error in terminal, you can start both client and server via:
+
+```
+yarn dev
+```
+
+**Make sure you're into root folder where setup.sh is.**
 
 ##### Note: We're using _`yarn`_ and not _`npm`_. Don't use npm commands instead use [yarn](https://yarnpkg.com/en/docs/cli/).

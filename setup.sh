@@ -27,7 +27,18 @@ if program_doesnt_exist yarn; then
   exit 1
 fi
 
-echo "## Doing a yarn install"
+echo
+echo "## Doing a yarn install in client"
+cd client
+yarn install
+cd ../server
+
+echo
+echo "## Doing a yarn install in server"
+yarn install
+
+cd ..
+echo "## Doing a yarn install in root folder"
 yarn install
 # assuming the script is in git-essentials directory, one level into the repo
 for hook in $HOOK_NAMES; do
