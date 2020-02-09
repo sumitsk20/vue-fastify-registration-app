@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  origin: '*',
+  origin: true,
   /*
    * put your options here
    * TODO: Add config here

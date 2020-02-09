@@ -7,7 +7,7 @@ class AuthController {
   }
 
   async register(request, reply) {
-    await fastify.validateRequiredFields(request.body, ['userData', 'strategy']);
+    await fastify.validateRequiredFields(request.body, ['userData', 'userRequestData', 'strategy']);
     const auth = new AuthService();
     const usrObject = await auth.registerNewUser(request.body, request.user);
 

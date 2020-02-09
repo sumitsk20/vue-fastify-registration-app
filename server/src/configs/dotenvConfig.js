@@ -59,6 +59,14 @@ const schema = {
       type: 'string',
       default: process.env.SECRET_SALT || 'wsaqfoiwfnj@'
     },
+    CAPTCHA_SITE_KEY: {
+      type: 'string',
+      default: '6LdyINcUAAAAAPQazVGspIR__nA5OGKQS6c0tOLQ'
+    },
+    CAPTCHA_SECRET_KEY: {
+      type: 'string',
+      default: '6LdyINcUAAAAAPrUBsLs4f-sGAXc9Am74DwbBPEK'
+    }
   }
 };
 
