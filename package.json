@@ -5,5 +5,11 @@
   "main": "index.js",
   "author": "Sumeet Kumar",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"cd  server && yarn start\" \"cd client && yarn serve\""
+  },
+  "dependencies": {
+    "concurrently": "^5.1.0"
+  }
 }
