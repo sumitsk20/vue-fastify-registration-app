@@ -9,7 +9,7 @@ const schema = {
   properties: {
     PORT: {
       type: 'string',
-      default: process.env.PORT || 3000
+      default: process.env.PORT || 7000
     },
     NODE_ENV: {
       type: 'string',
@@ -61,11 +61,11 @@ const schema = {
     },
     CAPTCHA_SITE_KEY: {
       type: 'string',
-      default: '6LdyINcUAAAAAPQazVGspIR__nA5OGKQS6c0tOLQ'
+      default: '6LfOH9cUAAAAAHpngbrjSjMVnBqKjtdGDPukAJ8z'
     },
     CAPTCHA_SECRET_KEY: {
       type: 'string',
-      default: '6LdyINcUAAAAAPrUBsLs4f-sGAXc9Am74DwbBPEK'
+      default: '6LfOH9cUAAAAAHGGsbxe7DwLVxKOImCG3cWsQkHF'
     }
   }
 };

@@ -38,7 +38,16 @@ export default {
     axios
       .get("https://api.ipify.org?format=json")
       .then(res => {
-        this.$store.state.user.ip = res.data.ip;
+        this.$store.state.ip = res.data.ip;
+        this.$store
+          .dispatch("COUNTREQUEST", {
+            ip: this.$store.state.ip,
+            action: "login"
+          })
+          .then(({ data, status }) => {
+            console.log(data.count);
+            if (data.count > 3) this.showCaptcha = true;
+          });
       })
       .catch(err => {
         console.log(err);
@@ -47,37 +56,23 @@ export default {
   data: () => ({
     email: "",
     password: "",
-    error: false
+    error: false,
+    showCaptcha: false,
+    captchaToken: ""
   }),
 
   methods: {
-    recaptcha() {
-      return this.$recaptcha("login").then(token => {
-        this.$store.state.user.captchaToken = token;
-        console.log("token", token); // Will print the token
-      });
-    },
-    fetchRequestCount() {
-      return this.$store
-        .dispatch("COUNTREQUEST", {
-          ip: this.$store.state.user.ip,
-          action: "login"
-        })
-        .then(({ data, status }) => {
-          this.$store.state.user.requestCount = data.count;
-        });
+    onVerify(response) {
+      this.captchaToken = response;
     },
     login() {
-      this.fetchRequestCount().then();
-      if (Number(this.$store.state.user.requestCount) > 3)
-        this.recaptcha().then(); //invisible recaptcha
       this.$store
         .dispatch("LOGIN", {
           credentials: { email: this.email, password: this.password },
           strategy: "email",
           userRequestData: {
             userip: this.$store.state.user.ip,
-            captchaToken: this.$store.state.user.captchaToken
+            captchaToken: this.captchaToken
           }
         })
         .then(success => {

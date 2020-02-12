@@ -10,13 +10,18 @@ class AuthController {
     console.log(request.body);
 
     await fastify.validateRequiredFields(request.body, ['userData', 'userRequestData', 'strategy']);
-    const capthcaResult = await verifyRecapthca({
-      secret: fastify.config.CAPTCHA_SECRET_KEY,
-      response: request.body.userRequestData.captchaToken,
-      remoteip: request.body.userRequestData.userip
-    });
-    if (!capthcaResult.success)
-      throw new fastify.errorCodes['CAPTCHA_FAILED']();
+    const requestCount = await fastify.redis.get(`IP:${request.body.userRequestData.userip}:signup`);
+    if (requestCount > 3) {
+      if (!request.body.userRequestData.captchaToken || request.body.userRequestData.captchaToken === '')
+        throw new fastify.errorCodes['CAPTCHA_REQUIRED']();
+      const capthcaResult = await verifyRecapthca({
+        secret: fastify.config.CAPTCHA_SECRET_KEY,
+        response: request.body.userRequestData.captchaToken,
+        remoteip: request.body.userRequestData.userip
+      });
+      if (!capthcaResult.success)
+        throw new fastify.errorCodes['CAPTCHA_FAILED']();
+    }
     const auth = new AuthService();
     const usrObject = await auth.registerNewUser(request.body, request.user);
 
@@ -35,14 +40,18 @@ class AuthController {
     console.log(request.body);
 
     await fastify.validateRequiredFields(request.body, ['credentials', 'userRequestData', 'strategy']);
-
-    const capthcaResult = await verifyRecapthca({
-      secret: fastify.config.CAPTCHA_SECRET_KEY,
-      response: request.body.userRequestData.captchaToken,
-      remoteip: request.body.userRequestData.userip
-    });
-    if (!capthcaResult.success)
-      throw new fastify.errorCodes['CAPTCHA_FAILED']();
+    const requestCount = await fastify.redis.get(`IP:${request.body.userRequestData.userip}:login`);
+    if (requestCount > 3) {
+      if (!request.body.userRequestData.captchaToken || request.body.userRequestData.captchaToken === '')
+        throw new fastify.errorCodes['CAPTCHA_REQUIRED']();
+      const capthcaResult = await verifyRecapthca({
+        secret: fastify.config.CAPTCHA_SECRET_KEY,
+        response: request.body.userRequestData.captchaToken,
+        remoteip: request.body.userRequestData.userip
+      });
+      if (!capthcaResult.success)
+        throw new fastify.errorCodes['CAPTCHA_FAILED']();
+    }
 
     const auth = new AuthService(request.body.userType);
     const usrObject = await auth.connect(request.body, request.user);

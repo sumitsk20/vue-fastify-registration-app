@@ -2,8 +2,8 @@
 
 module.exports = {
   port: 6379, // Redis port
-  host: '127.0.0.1', // Redis host
+  host: 'SG-demoapp-30893.servers.mongodirector.com', // Redis host
   family: 4, // 4 (IPv4) or 6 (IPv6)
-  // password: 'auth',
+  password: 'wBLGPN7GsNJxuppHbRJR8skbuezzvsHL',
   db: 0
 };

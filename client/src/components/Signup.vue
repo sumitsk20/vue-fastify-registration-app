@@ -42,6 +42,14 @@
               ></v-text-field>
             </v-form>
           </v-card-text>
+
+          <vue-recaptcha
+            v-if="showCaptcha"
+            @verify="onVerify"
+            sitekey="6LfOH9cUAAAAAHpngbrjSjMVnBqKjtdGDPukAJ8z"
+            :loadRecaptchaScript="true"
+          ></vue-recaptcha>
+
           <v-divider light></v-divider>
 
           <v-card-actions>
@@ -57,14 +65,25 @@
 
 <script>
 import axios from "axios";
+import VueRecaptcha from "vue-recaptcha";
 import { mapGetters } from "vuex";
 export default {
   name: "signup",
+  components: { VueRecaptcha },
   created() {
     axios
       .get("https://api.ipify.org?format=json")
       .then(res => {
         this.$store.state.ip = res.data.ip;
+        this.$store
+          .dispatch("COUNTREQUEST", {
+            ip: this.$store.state.ip,
+            action: "signup"
+          })
+          .then(({ data, status }) => {
+            console.log(data.count);
+            if (data.count > 3) this.showCaptcha = true;
+          });
       })
       .catch(err => {
         console.log(err);
@@ -72,11 +91,13 @@ export default {
   },
   data: () => ({
     formerror: false,
+    showCaptcha: false,
     fullName: "",
     email: "",
     password: "",
     confirm_password: "",
     error_msg: "",
+    captchaToken: "",
     rules: {
       required: value => !!value || "Required",
       email: value => {
@@ -86,26 +107,11 @@ export default {
     }
   }),
   methods: {
-    recaptcha() {
-      return this.$recaptcha("login").then(token => {
-        this.$store.state.captchaToken = token;
-        console.log("token", token); // Will print the token
-      });
-    },
-    fetchRequestCount() {
-      return this.$store
-        .dispatch("COUNTREQUEST", {
-          ip: this.$store.state.ip,
-          action: "signup"
-        })
-        .then(({ data, status }) => {
-          this.$store.state.requestCount = data.count;
-        });
+    onVerify(response) {
+      this.captchaToken = response;
     },
     register() {
       if (this.valid()) {
-        this.fetchRequestCount().then();
-        if (Number(this.$store.state.requestCount) > 3) this.recaptcha().then(); //invisible recaptcha
         this.$store
           .dispatch("REGISTER", {
             userData: {
@@ -115,7 +121,7 @@ export default {
             },
             userRequestData: {
               userip: this.$store.state.ip,
-              captchaToken: this.$store.state.captchaToken
+              captchaToken: this.captchaToken
             },
             strategy: "email"
           })

@@ -3,7 +3,6 @@ import axios from 'axios';
 export default {
   state: {
     ip: '',
-    captchaToken: '',
     requestCount: '0'
   },
   getters: {
