@@ -8,7 +8,7 @@ import vuetify from './plugins/vuetify';
 // import { VueReCaptcha } from 'vue-recaptcha-v3';
 
 Vue.config.productionTip = false;
-axios.defaults.baseURL = 'http://localhost:3000/api/v1';
+axios.defaults.baseURL = 'http://localhost:7000/api/v1';
 
 
 new Vue({
