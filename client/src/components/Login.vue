@@ -7,16 +7,19 @@
             <v-toolbar dark color="blue">
               <v-toolbar-title>Login form</v-toolbar-title>
             </v-toolbar>
-            <v-alert
-              color="error"
-              :value="error"
-              icon="close"
-            >The username or the password are incorrect.</v-alert>
+            <v-alert color="error" :value="error">The username or the password are incorrect.</v-alert>
             <v-card-text>
               <v-text-field v-model="email" name="email" label="Email" type="text"></v-text-field>
 
               <v-text-field v-model="password" name="password" label="Password" type="password"></v-text-field>
             </v-card-text>
+
+            <vue-recaptcha
+              v-if="showCaptcha"
+              @verify="onVerify"
+              sitekey="6LfOH9cUAAAAAHpngbrjSjMVnBqKjtdGDPukAJ8z"
+              :loadRecaptchaScript="true"
+            ></vue-recaptcha>
             <v-divider light></v-divider>
             <v-card-actions>
               <v-btn to="/" rounded color="indigo" dark>Register</v-btn>
@@ -32,8 +35,11 @@
 
 <script>
 import axios from "axios";
+import VueRecaptcha from "vue-recaptcha";
+
 export default {
   name: "login",
+  components: { VueRecaptcha },
   created() {
     axios
       .get("https://api.ipify.org?format=json")
