@@ -44,8 +44,7 @@ export default {
             strategy
           })
           .then(({ data, status }) => {
-            if (status === 201 || status === 201)
-              resolve(true);
+            resolve({ data, status });
           })
           .catch(error => {
             reject(error.response.data);
